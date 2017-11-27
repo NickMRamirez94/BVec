@@ -110,6 +110,12 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDowhile_stat(BitVecParser.Dowhile_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#while_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_stat(BitVecParser.While_statContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

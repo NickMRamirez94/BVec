@@ -1,19 +1,19 @@
 PROGRAM sample;
 
-VAR
+VARIABLES
     i, j, k : integer;
     alpha, beta5x : real;
     
-BEGIN
+{
     i := 32;
     j := i;
     i := -2 + 3*j;
     
     IF (3 < 5) THEN 
-    	BEGIN
+    	{
     		j := 7;
     		i := 40;
-    	END
+    	}
     ELSE j := 8;
     
     i := 0;
@@ -25,13 +25,14 @@ BEGIN
 	
 	i := 0;
 	
-	WHILE (i > 10)
-		BEGIN
+	WHILE (i > 10) DO
+		{
 			i := i + 1;
-		END
+			j := 0;
+		};
 
-    alpha := 9.3;
+	alpha := 9.3;
     beta5x := alpha;
     beta5x := alpha/3.7 - alpha*2.88;
     beta5x := 8.45*(alpha + 9.12)
-END.
+}.

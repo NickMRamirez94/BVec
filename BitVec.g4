@@ -17,12 +17,13 @@ varList      : varId ( ',' varId )* ;
 varId        : IDENTIFIER ;
 typeId       : IDENTIFIER ;
 
-compoundStmt : BEGIN stmtList END ;
+compoundStmt : OBRACK stmtList CBRACK ;
 
 stmt : compoundStmt
      | assignmentStmt
      | if_stat
      | dowhile_stat
+     | while_stat
      | 
      ;
      
@@ -30,7 +31,7 @@ stmtList       : stmt ( ';' stmt )* ;
 assignmentStmt : variable ':=' expr ;
 if_stat		   : IF expr THEN stmt ( ELSE stmt )? ;
 dowhile_stat   : DO stmtList WHILE expr ;
-while_stat	   : WHILE expr compoundStmt ; 
+while_stat	   : WHILE expr DO stmt ; 
 
 variable : IDENTIFIER ;
 
@@ -59,9 +60,9 @@ number locals [ TypeSpec type = null ]
     ;
 
 PROGRAM : 'PROGRAM' ;
-VAR     : 'VAR' ;
-BEGIN   : 'BEGIN' ;
-END     : 'END' ;
+VAR     : 'VARIABLES' ;
+OBRACK  : '{' ;
+CBRACK  : '}' ;
 IF		: 'IF' ;
 THEN	: 'THEN' ;
 ELSE	: 'ELSE' ;

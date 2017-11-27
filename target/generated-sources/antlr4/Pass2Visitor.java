@@ -171,6 +171,33 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	return 0;
     }
+    
+    @Override
+    public Integer visitWhile_stat(BitVecParser.While_statContext ctx)
+    {
+    	
+    	/*
+    	 * Form is:
+    	 * loop-label:
+    	 * code to evaluate boolean test expression
+    	 * ifne next-label
+    	 * code for statements after test
+    	 * goto loop-label
+    	 * next-label:
+    	 * */
+    	
+    	Label loopLabel = Label.newLabel();
+    	Label nextLabel = Label.newLabel();
+    	
+    	jFile.println(loopLabel.toString() + ":");
+    	visit(ctx.expr());
+    	jFile.println("\tifne\t" + nextLabel.toString());
+    	visit(ctx.getChild(3));
+    	jFile.println("\tgoto\t" + loopLabel.toString());
+    	jFile.println(nextLabel.toString() + ":");
+    	
+    	return 0;
+    }
 
     @Override 
     public Integer visitAddSubExpr(BitVecParser.AddSubExprContext ctx)

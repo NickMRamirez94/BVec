@@ -56,7 +56,7 @@
 	iadd
 	putstatic	sample/i I
 
-; IF(3<5)THENBEGINj:=7;i:=40;ENDELSEj:=8
+; IF(3<5)THEN{j:=7;i:=40;}ELSEj:=8
 
 	ldc	3
 	ldc	5
@@ -68,7 +68,7 @@ L003:
 L004:
 	ifeq	L002
 
-; BEGINj:=7;i:=40;END
+; {j:=7;i:=40;}
 
 
 ; j:=7
@@ -128,6 +128,44 @@ L007:
 L008:
 	goto	L005
 L006:
+
+; i:=0
+
+	ldc	0
+	putstatic	sample/i I
+
+; WHILE(i>10)DO{i:=i+1;j:=0;}
+
+L009:
+	getstatic	sample/i I
+	ldc	10
+	if_icmpgt	L011
+	iconst_0
+	goto	L012
+L011:
+	iconst_1
+L012:
+	ifne	L010
+
+; {i:=i+1;j:=0;}
+
+
+; i:=i+1
+
+	getstatic	sample/i I
+	ldc	1
+	iadd
+	putstatic	sample/i I
+
+; j:=0
+
+	ldc	0
+	putstatic	sample/j I
+
+; 
+
+	goto	L009
+L010:
 
 ; alpha:=9.3
 
