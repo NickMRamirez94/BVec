@@ -198,6 +198,15 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	return 0;
     }
+    
+    @Override
+    public Integer visitPrint_stat(BitVecParser.Print_statContext ctx)
+    {
+    	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream");
+    	jFile.println("\taload_1");
+    	jFile.println("\tinvokevirutal	java/io/PrintStream.println:(Ljava/lang/Object;)V");
+    	return 0;
+    }
 
     @Override 
     public Integer visitAddSubExpr(BitVecParser.AddSubExprContext ctx)

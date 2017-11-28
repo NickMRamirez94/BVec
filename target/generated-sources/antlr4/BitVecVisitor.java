@@ -116,6 +116,12 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_stat(BitVecParser.While_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#print_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrint_stat(BitVecParser.Print_statContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

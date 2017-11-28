@@ -9,6 +9,8 @@ VARIABLES
     j := i;
     i := -2 + 3*j;
     
+    print(i);
+    
     IF (3 < 5) THEN 
     	{
     		j := 7;

@@ -24,6 +24,7 @@ stmt : compoundStmt
      | if_stat
      | dowhile_stat
      | while_stat
+     | print_stat
      | 
      ;
      
@@ -31,7 +32,8 @@ stmtList       : stmt ( ';' stmt )* ;
 assignmentStmt : variable ':=' expr ;
 if_stat		   : IF expr THEN stmt ( ELSE stmt )? ;
 dowhile_stat   : DO stmtList WHILE expr ;
-while_stat	   : WHILE expr DO stmt ; 
+while_stat	   : WHILE expr DO stmt ;
+print_stat	   : 'print' '(' expr ')'; 
 
 variable : IDENTIFIER ;
 

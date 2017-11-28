@@ -56,6 +56,12 @@
 	iadd
 	putstatic	sample/i I
 
+; print(i)
+
+	getstatic java/lang/System/out Ljava/io/PrintStream
+	aload_1
+	invokevirutal	java/io/PrintStream.println:(Ljava/lang/Object;)V
+
 ; IF(3<5)THEN{j:=7;i:=40;}ELSEj:=8
 
 	ldc	3
