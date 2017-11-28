@@ -203,7 +203,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     public Integer visitPrint_stat(BitVecParser.Print_statContext ctx)
     {
     	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream");
-    	jFile.println("\taload_1");
+    	visit(ctx.expr());
     	jFile.println("\tinvokevirutal	java/io/PrintStream.println:(Ljava/lang/Object;)V");
     	return 0;
     }

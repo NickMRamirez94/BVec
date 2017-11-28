@@ -59,7 +59,7 @@
 ; print(i)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream
-	aload_1
+	getstatic	sample/i I
 	invokevirutal	java/io/PrintStream.println:(Ljava/lang/Object;)V
 
 ; IF(3<5)THEN{j:=7;i:=40;}ELSEj:=8
