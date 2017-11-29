@@ -15,25 +15,29 @@ VARIABLES
     	{
     		j := 7;
     		i := 40;
+    		print(j);
     	}
     ELSE j := 8;
     
     i := 0;
      
-	DO
-		j := 2 * i;
-		i := i + 1;
-	WHILE i > 10;
 	
-	i := 0;
-	
-	WHILE (i > 10) DO
+	WHILE (i < 10) DO
 		{
+			print(i);
 			i := i + 1;
-			j := 0;
 		};
+	
+	i := 0;	
+	
+	DO
+		j := 2*i;
+		print(j);
+		i := i + 1;
+	WHILE i < 10;
 
 	alpha := 9.3;
+	print(alpha);
     beta5x := alpha;
     beta5x := alpha/3.7 - alpha*2.88;
     beta5x := 8.45*(alpha + 9.12)

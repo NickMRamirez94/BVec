@@ -161,9 +161,11 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	visit(ctx.getChild(1));
     	
-    	jFile.println("\tifne\t" + nextLabel.toString());
-    	
     	visit(ctx.expr());
+    	
+    	jFile.println("\ticonst_1");
+    	jFile.println("\tixor");
+    	jFile.println("\tifne\t" + nextLabel.toString());
     	
     	jFile.println("\tgoto\t" + loopLabel.toString());
     	
@@ -191,6 +193,8 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	jFile.println(loopLabel.toString() + ":");
     	visit(ctx.expr());
+    	jFile.println("\ticonst_1");
+    	jFile.println("\tixor");
     	jFile.println("\tifne\t" + nextLabel.toString());
     	visit(ctx.getChild(3));
     	jFile.println("\tgoto\t" + loopLabel.toString());
@@ -202,9 +206,17 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     @Override
     public Integer visitPrint_stat(BitVecParser.Print_statContext ctx)
     {
-    	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream");
+    	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
     	visit(ctx.expr());
-    	jFile.println("\tinvokevirutal	java/io/PrintStream.println:(Ljava/lang/Object;)V");
+    	
+    	TypeSpec type = ctx.expr().type;
+    	
+    	String typeIndicator = (type == Predefined.integerType) ? "I"
+                : (type == Predefined.realType)    ? "F"
+                :                                    "?";
+
+    	jFile.println("\tinvokevirtual	java/io/PrintStream/println(" + typeIndicator + ")V");
+    	
     	return 0;
     }
 
