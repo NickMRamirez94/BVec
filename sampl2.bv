@@ -1,0 +1,28 @@
+PROGRAM sampl2;
+
+VARIABLES
+    i : integer;
+    
+FUNCTION func(k : integer) : integer;
+
+VARIABLES
+	h, j : integer;
+	
+	{
+		h := i;
+		j := i;
+		RETURN 2;
+	};
+    
+    
+{
+
+i := 6;
+
+MATCH i WITH
+    	5 : {i := 3;
+    		 i := 7;}
+    	6 : {i := 7};
+    
+  
+}.

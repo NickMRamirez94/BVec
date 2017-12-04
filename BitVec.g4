@@ -8,32 +8,45 @@ grammar BitVec;  // Grammar for BitVec Language
 program   : header mainBlock '.' ;
 header    : PROGRAM IDENTIFIER ';' ;
 mainBlock : block;
-block     : declarations compoundStmt ;
+block     : declarations* compoundStmt ;
 
-declarations : VAR declList ';' ;
+declarations : VAR declList ';' #varDeclar
+			 | FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar
+		     ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
 varList      : varId ( ',' varId )* ;
-varId        : IDENTIFIER ;
+varId        locals [ String type = null ] : IDENTIFIER ;
 typeId       : IDENTIFIER ;
-
+formalParmList : formalParm ( ',' formalParm )* ;
+formalParm	 locals [ TypeSpec type = null ]
+			 : varId ':' typeId		#valueParm
+			 | '&' varId ':' typeId	#refParm 
+			 ;
+				
 compoundStmt : OBRACK stmtList CBRACK ;
 
 stmt : compoundStmt
      | assignmentStmt
      | if_stat
+     | match_stat
      | dowhile_stat
      | while_stat
      | print_stat
+     | return_stat
+     | function_call
      | 
      ;
      
 stmtList       : stmt ( ';' stmt )* ;
 assignmentStmt : variable ':=' expr ;
 if_stat		   : IF expr THEN stmt ( ELSE stmt )? ;
+match_stat	   : MATCH expr WITH ( number ':' stmt )* ; 
 dowhile_stat   : DO stmtList WHILE expr ;
 while_stat	   : WHILE expr DO stmt ;
-print_stat	   : 'print' '(' expr ')'; 
+print_stat	   : 'print' '(' expr ')';
+return_stat	   : RETURN expr ; 
+function_call  : IDENTIFIER '(' expr* (',' expr )* ')' ;
 
 variable : IDENTIFIER ;
 
@@ -63,6 +76,7 @@ number locals [ TypeSpec type = null ]
 
 PROGRAM : 'PROGRAM' ;
 VAR     : 'VARIABLES' ;
+FUNCTION: 'FUNCTION' ;
 OBRACK  : '{' ;
 CBRACK  : '}' ;
 IF		: 'IF' ;
@@ -70,6 +84,9 @@ THEN	: 'THEN' ;
 ELSE	: 'ELSE' ;
 DO	 	: 'DO' ;
 WHILE 	: 'WHILE' ;
+RETURN  : 'RETURN' ;
+MATCH	: 'MATCH' ;
+WITH	: 'WITH' ;
 
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;

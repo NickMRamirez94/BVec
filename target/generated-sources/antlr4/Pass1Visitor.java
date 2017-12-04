@@ -69,7 +69,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     }
 
     @Override 
-    public Integer visitDeclarations(BitVecParser.DeclarationsContext ctx) 
+    public Integer visitVarDeclar(BitVecParser.VarDeclarContext ctx) 
     { 
         Integer value = visitChildren(ctx); 
         
@@ -86,6 +86,75 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         jFile.println(".end method");
         
         return value;
+    }
+    
+    @Override
+    public Integer visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx)
+    {
+    	Integer i = 0;
+    	while (ctx.formalParmList(i) != null) {
+    		visit(ctx.formalParmList(i));
+    		i++;
+    	}
+    	
+    	visit(ctx.block());
+    	return 0;
+    }
+    
+    @Override 
+    public Integer visitFormalParmList(BitVecParser.FormalParmListContext ctx)
+    {
+    	Integer i = 0;
+    	while (ctx.getChild(i) != null){
+    		visit(ctx.getChild(i));
+    		i++;
+    	}
+    	
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitValueParm(BitVecParser.ValueParmContext ctx)
+    {
+    	
+    	String typeName = ctx.typeId().IDENTIFIER().toString();
+        
+        TypeSpec type;
+        
+        if (typeName.equalsIgnoreCase("integer")) {
+            type = Predefined.integerType;
+        }
+        else if (typeName.equalsIgnoreCase("real")) {
+            type = Predefined.realType;
+        }
+        else {
+            type = null;
+        }
+        
+        ctx.type = type;
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitRefParm(BitVecParser.RefParmContext ctx)
+    {
+    	
+    	String typeName = ctx.typeId().IDENTIFIER().toString();
+        
+        TypeSpec type;
+        
+        if (typeName.equalsIgnoreCase("integer")) {
+            type = Predefined.integerType;
+        }
+        else if (typeName.equalsIgnoreCase("real")) {
+            type = Predefined.realType;
+        }
+        else {
+            type = null;
+        }
+        
+        ctx.type = type;
+    	return 0;
     }
 
     @Override 
@@ -145,6 +214,8 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         
         return visitChildren(ctx); 
     }
+    
+    
 
     @Override 
     public Integer visitAddSubExpr(BitVecParser.AddSubExprContext ctx)

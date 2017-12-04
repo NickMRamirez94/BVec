@@ -26,7 +26,7 @@ public class BitVec
         
         Pass1Visitor pass1 = new Pass1Visitor();
         pass1.visit(tree);
-        
+
         PrintWriter jFile = pass1.getAssemblyFile();
 
         Pass2Visitor pass2 = new Pass2Visitor(jFile);

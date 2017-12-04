@@ -38,11 +38,19 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlock(BitVecParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BitVecParser#declarations}.
+	 * Visit a parse tree produced by the {@code varDeclar}
+	 * labeled alternative in {@link BitVecParser#declarations}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarations(BitVecParser.DeclarationsContext ctx);
+	T visitVarDeclar(BitVecParser.VarDeclarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code functionDeclar}
+	 * labeled alternative in {@link BitVecParser#declarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BitVecParser#declList}.
 	 * @param ctx the parse tree
@@ -74,6 +82,26 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypeId(BitVecParser.TypeIdContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#formalParmList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParmList(BitVecParser.FormalParmListContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code valueParm}
+	 * labeled alternative in {@link BitVecParser#formalParm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitValueParm(BitVecParser.ValueParmContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code refParm}
+	 * labeled alternative in {@link BitVecParser#formalParm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRefParm(BitVecParser.RefParmContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#compoundStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -104,6 +132,12 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_stat(BitVecParser.If_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#match_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMatch_stat(BitVecParser.Match_statContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#dowhile_stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -121,6 +155,12 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrint_stat(BitVecParser.Print_statContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link BitVecParser#return_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturn_stat(BitVecParser.Return_statContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BitVecParser#variable}.
 	 * @param ctx the parse tree

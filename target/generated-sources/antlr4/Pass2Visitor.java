@@ -5,8 +5,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 
-import wci.intermediate.Label;
-
 public class Pass2Visitor extends BitVecBaseVisitor<Integer> 
 {
     String programName;
@@ -64,6 +62,105 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         jFile.println(".end method");
         
         return value;
+    }
+    
+    @Override
+    public Integer visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx)
+    {
+    	
+    	String fName = ctx.getChild(1).toString();
+    	String typeName = ctx.typeId().IDENTIFIER().toString();
+    	String rType;
+    	
+    	if (typeName.equalsIgnoreCase("integer")) {
+            rType = "I";
+        }
+        else if (typeName.equalsIgnoreCase("real")) {
+            rType = "F";
+        }
+        else {
+            rType = null;
+        }
+    	
+    	jFile.println();
+    	jFile.print(".method static " + fName + "(");
+    	//print parameter indicator types
+    	//there's probably a better way to do this
+    	Integer i = 0;
+    	while (ctx.formalParmList(i) != null) {
+    		visit(ctx.formalParmList(i));
+    		i++;
+    	}
+    	
+    	jFile.println(")" + rType);
+    	
+    	//visit block statement here
+    	visit(ctx.block());
+    	
+    	jFile.println(".limit stack 2");
+    	jFile.println(".limit locals 3");
+    	jFile.println(".end method");
+    	jFile.println();
+    	
+    	return 0;
+    }
+    
+    @Override 
+    public Integer visitFormalParmList(BitVecParser.FormalParmListContext ctx)
+    {
+    	
+    	Integer i = 0;
+    	while (ctx.getChild(i) != null){
+    		visit(ctx.getChild(i));
+    		i++;
+    	}
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitValueParm(BitVecParser.ValueParmContext ctx)
+    {
+    	
+        TypeSpec type = ctx.type;
+        String   typeIndicator;
+        
+        if (type == Predefined.integerType) {
+            typeIndicator = "I";
+        }
+        else if (type == Predefined.realType) {
+            
+            typeIndicator = "F";
+        }
+        else {
+            typeIndicator = "?";
+        }
+        
+        jFile.print(typeIndicator);
+        
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitRefParm(BitVecParser.RefParmContext ctx)
+    {
+    	
+    	TypeSpec type = ctx.type;
+        String   typeIndicator;
+        
+        if (type == Predefined.integerType) {
+            typeIndicator = "I";
+        }
+        else if (type == Predefined.realType) {
+            
+            typeIndicator = "F";
+        }
+        else {
+            typeIndicator = "?";
+        }
+        
+        jFile.print(typeIndicator);
+    	
+    	return 0;
     }
 
     @Override 
@@ -151,6 +248,45 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     }
     
     @Override
+    public Integer visitMatch_stat(BitVecParser.Match_statContext ctx)
+    {
+    	visit(ctx.expr());
+    	
+    	jFile.println("\tlookupswitch");
+    	
+    	Label nextLabel = Label.newLabel();
+    	
+    	/*
+    	 * for each select value vi
+    	 * 	vi: branch-labelj
+    	 * 
+    	 * default: next-label
+    	 * */
+    	
+    	Integer i = 4;
+    	
+    	while (ctx.getChild(i) != null)
+    	{
+    		Label branchLabel = Label.newLabel();
+    		jFile.print(" " + ctx.getText() + ':' + branchLabel.toString());
+    		i += 3;
+    	}
+    	
+    	jFile.println("\t default:\t" + nextLabel.toString());
+    	
+    	/*
+    	 * for each branch label
+    	 * 	branch-labelj:
+    	 * 		code for the jth statement
+    	 * goto next-label
+    	 * */
+    	
+    	jFile.println(nextLabel.toString() + ':');
+    	
+    	return 0;
+    }
+    
+    @Override
     public Integer visitDowhile_stat(BitVecParser.Dowhile_statContext ctx)
     {
     	
@@ -217,6 +353,29 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
 
     	jFile.println("\tinvokevirtual	java/io/PrintStream/println(" + typeIndicator + ")V");
     	
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitReturn_stat(BitVecParser.Return_statContext ctx)
+    {
+    	
+    	visit(ctx.expr());
+    	TypeSpec type = ctx.expr().type;
+    	
+    	if ((type == Predefined.integerType) ||
+                (type == Predefined.booleanType))
+            {
+                jFile.println("\tireturn");
+            }
+    	else if (type == Predefined.realType)
+    	{
+    		jFile.println("\tfreturn");
+    	}
+    	else
+    	{
+    		jFile.println("\t???");
+    	}
     	return 0;
     }
 
