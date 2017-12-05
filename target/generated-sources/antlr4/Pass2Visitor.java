@@ -349,7 +349,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	String typeIndicator = (type == Predefined.integerType) ? "I"
                 : (type == Predefined.realType)    ? "F"
-                :                                    "Ljava/lang/String"; //gets here it's a string
+                :                                    "Ljava/lang/String;"; //gets here it's a string
 
     	jFile.println("\tinvokevirtual	java/io/PrintStream/println(" + typeIndicator + ")V");
     	

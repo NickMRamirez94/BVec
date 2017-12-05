@@ -60,7 +60,7 @@
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	ldc "I is equal to"
-	invokevirtual	java/io/PrintStream/println(Ljava/lang/String)V
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
 ; print(i)
 
