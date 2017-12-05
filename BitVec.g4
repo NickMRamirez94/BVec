@@ -58,6 +58,7 @@ expr locals [ TypeSpec type = null ]
     | signedNumber         # signedNumberExpr
     | variable             # variableExpr
     | '(' expr ')'         # parenExpr
+    | boole              # booleanExpr
     ;
      
 mulDivOp : MUL_OP | DIV_OP ;
@@ -73,6 +74,10 @@ number locals [ TypeSpec type = null ]
     : INTEGER    # integerConst
     | FLOAT      # floatConst
     ;
+    
+boole locals [ TypeSpec type = null]
+    : BOOL       # boolconst
+    ;
 
 PROGRAM : 'PROGRAM' ;
 VAR     : 'VARIABLES' ;
@@ -87,6 +92,8 @@ WHILE 	: 'WHILE' ;
 RETURN  : 'RETURN' ;
 MATCH	: 'MATCH' ;
 WITH	: 'WITH' ;
+
+BOOL       : 'TRUE'|'FALSE' ;
 
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;
