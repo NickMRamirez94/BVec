@@ -349,7 +349,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	String typeIndicator = (type == Predefined.integerType) ? "I"
                 : (type == Predefined.realType)    ? "F"
-                :                                    "?";
+                :                                    "Ljava/lang/String"; //gets here it's a string
 
     	jFile.println("\tinvokevirtual	java/io/PrintStream/println(" + typeIndicator + ")V");
     	
@@ -524,6 +524,17 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
                       "/" + variableName + " " + typeIndicator);
         
         return visitChildren(ctx); 
+    }
+    
+    @Override
+    public Integer visitStringExpr(BitVecParser.StringExprContext ctx)
+    {
+    	String sValue = ctx.getChild(0).toString();
+    	
+    	//Emit instruction
+    	jFile.println("\tldc " + sValue);
+ 
+    	return visitChildren(ctx);
     }
     
     @Override 

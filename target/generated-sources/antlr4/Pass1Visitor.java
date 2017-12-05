@@ -97,6 +97,8 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     		i++;
     	}
     	
+    	
+    	
     	visit(ctx.block());
     	return 0;
     }
@@ -287,7 +289,16 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         SymTabEntry variableId = symTabStack.lookup(variableName);
         
         ctx.type = variableId.getTypeSpec();
+        
         return visitChildren(ctx); 
+    }
+    
+    @Override 
+    public Integer visitStringExpr(BitVecParser.StringExprContext ctx) 
+    {
+    	
+    	ctx.type = null;
+    	return visitChildren(ctx);
     }
 
     @Override 

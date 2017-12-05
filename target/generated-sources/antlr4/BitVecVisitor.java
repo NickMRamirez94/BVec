@@ -38,19 +38,19 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlock(BitVecParser.BlockContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code functionDeclar}
+	 * labeled alternative in {@link BitVecParser#funcdeclarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code varDeclar}
 	 * labeled alternative in {@link BitVecParser#declarations}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVarDeclar(BitVecParser.VarDeclarContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code functionDeclar}
-	 * labeled alternative in {@link BitVecParser#declarations}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BitVecParser#declList}.
 	 * @param ctx the parse tree
@@ -162,11 +162,24 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturn_stat(BitVecParser.Return_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#function_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_call(BitVecParser.Function_callContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariable(BitVecParser.VariableContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringExpr}
+	 * labeled alternative in {@link BitVecParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringExpr(BitVecParser.StringExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code variableExpr}
 	 * labeled alternative in {@link BitVecParser#expr}.

@@ -3,16 +3,17 @@ PROGRAM sampl2;
 VARIABLES
     i : integer;
     
-FUNCTION func(k : integer) : integer;
+FUNCTION func() : integer;
 
 VARIABLES
-	h, j : integer;
+	y, z : integer;
 	
 	{
-		h := i;
-		j := i;
+		y := k;
+		z := k;
 		RETURN 2;
 	};
+    
     
     
 {

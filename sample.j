@@ -25,21 +25,6 @@
 .limit stack 1
 .end method
 
-; h,j:integer
-
-.field private static h I
-.field private static j I
-
-.method public <init>()V
-
-	aload_0
-	invokenonvirtual    java/lang/Object/<init>()V
-	return
-
-.limit locals 1
-.limit stack 1
-.end method
-
 .method public static main([Ljava/lang/String;)V
 
 	new RunTimer
@@ -50,30 +35,6 @@
 	dup
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        sample/_standardIn LPascalTextIn;
-
-.method static func(I)I
-
-; h:=k
-
-	getstatic	sample/k I
-	putstatic	sample/h I
-
-; j:=k
-
-	getstatic	sample/k I
-	putstatic	sample/j I
-
-; RETURN2
-
-	ldc	2
-	ireturn
-
-; 
-
-.limit stack 2
-.limit locals 3
-.end method
-
 
 ; i:=32
 
@@ -94,6 +55,12 @@
 	imul
 	iadd
 	putstatic	sample/i I
+
+; print("I is equal to")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "I is equal to"
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String)V
 
 ; print(i)
 

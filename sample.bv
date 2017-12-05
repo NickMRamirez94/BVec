@@ -4,25 +4,14 @@ VARIABLES
     i, j, k : integer;
     alpha, beta5x : real;
     
-FUNCTION func(k : integer) : integer;
 
-VARIABLES
-	h, j : integer;
-	
-	{
-		h := k;
-		j := k;
-		RETURN 2;
-	};
-    
     
 {
     i := 32;
     j := i;
     i := -2 + 3*j;
     
-    func(k);
-    
+    print("I is equal to");
     print(i);
     
     IF (3 < 5) THEN 

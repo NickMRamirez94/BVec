@@ -8,11 +8,12 @@ grammar BitVec;  // Grammar for BitVec Language
 program   : header mainBlock '.' ;
 header    : PROGRAM IDENTIFIER ';' ;
 mainBlock : block;
-block     : declarations* compoundStmt ;
+block     : declarations* funcdeclarations* compoundStmt ;
 
-declarations : VAR declList ';' #varDeclar
-			 | FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar
-		     ;
+funcdeclarations : FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar 
+				 ;
+
+declarations : VAR declList ';' #varDeclar ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
 varList      : varId ( ',' varId )* ;
@@ -44,7 +45,7 @@ if_stat		   : IF expr THEN stmt ( ELSE stmt )? ;
 match_stat	   : MATCH expr WITH ( number ':' stmt )* ; 
 dowhile_stat   : DO stmtList WHILE expr ;
 while_stat	   : WHILE expr DO stmt ;
-print_stat	   : 'print' '(' expr ')';
+print_stat	   : 'print' '(' expr ')' ;
 return_stat	   : RETURN expr ; 
 function_call  : IDENTIFIER '(' expr* (',' expr )* ')' ;
 
@@ -58,6 +59,7 @@ expr locals [ TypeSpec type = null ]
     | signedNumber         # signedNumberExpr
     | variable             # variableExpr
     | '(' expr ')'         # parenExpr
+    | STRING			   # stringExpr
     ;
      
 mulDivOp : MUL_OP | DIV_OP ;
@@ -87,6 +89,8 @@ WHILE 	: 'WHILE' ;
 RETURN  : 'RETURN' ;
 MATCH	: 'MATCH' ;
 WITH	: 'WITH' ;
+
+STRING	: '"' .*? '"' ;
 
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;
