@@ -8,10 +8,13 @@ grammar BitVec;  // Grammar for BitVec Language
 program   : header mainBlock '.' ;
 header    : PROGRAM IDENTIFIER ';' ;
 mainBlock : block;
-block     : declarations* compoundStmt ;
+block     : declarations* funcdeclarations* compoundStmt ;
+
+funcdeclarations : FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar
+				 ;
+
 
 declarations : VAR declList ';' #varDeclar
-			 | FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar
 		     ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
