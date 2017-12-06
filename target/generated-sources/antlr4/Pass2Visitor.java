@@ -177,6 +177,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         
         String typeIndicator = (ctx.expr().type == Predefined.integerType) ? "I"
                              : (ctx.expr().type == Predefined.realType)    ? "F"
+                             : (ctx.expr().type == Predefined.booleanType) ? "Z"
                              :                                    "?";
         
         // Emit a field put instruction.
@@ -341,6 +342,23 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     
     @Override
     public Integer visitPrint_stat(BitVecParser.Print_statContext ctx)
+    {
+    	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
+    	visit(ctx.expr());
+    	
+    	TypeSpec type = ctx.expr().type;
+    	
+    	String typeIndicator = (type == Predefined.integerType) ? "I"
+                : (type == Predefined.realType)    ? "F"
+                :                                    "Ljava/lang/String;"; //gets here it's a string
+
+    	jFile.println("\tinvokevirtual	java/io/PrintStream/print(" + typeIndicator + ")V");
+    	
+    	return 0;
+    }
+    
+    @Override
+    public Integer visitPrintln_stat(BitVecParser.Println_statContext ctx)
     {
     	jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
     	visit(ctx.expr());
@@ -517,6 +535,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         
         String typeIndicator = (type == Predefined.integerType) ? "I"
                              : (type == Predefined.realType)    ? "F"
+                             : (type == Predefined.booleanType) ? "Z"
                              :                                    "?";
         
         // Emit a field get instruction.
@@ -553,6 +572,24 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         }
         
         return value;
+    }
+    
+    @Override
+    public Integer visitBooleanExpr(BitVecParser.BooleanExprContext ctx)
+    {
+    	String boolVal = ctx.getText().toString();
+    	String indicator;
+    	if (boolVal.equals("false")) {
+    		indicator = "0";
+    	}
+    	else if (boolVal.equals("true")) {
+    		indicator = "1";
+    	}
+    	else {
+    		indicator ="?";
+    	}
+    	jFile.println("\tldc\t" + indicator);
+    	return visitChildren(ctx);
     }
 
     @Override 

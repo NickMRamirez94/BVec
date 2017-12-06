@@ -15,6 +15,11 @@
 .field private static alpha F
 .field private static beta5x F
 
+; q,w:boolean
+
+.field private static q Z
+.field private static w Z
+
 .method public <init>()V
 
 	aload_0
@@ -56,19 +61,24 @@
 	iadd
 	putstatic	sample/i I
 
-; print("I is equal to")
+; q:=true
+
+	ldc	1
+	putstatic	sample/q Z
+
+; print("I is equal to: ")
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
-	ldc "I is equal to"
-	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+	ldc "I is equal to: "
+	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
 
-; print(i)
+; println(i)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic	sample/i I
 	invokevirtual	java/io/PrintStream/println(I)V
 
-; IF(3<5)THEN{j:=7;i:=40;print(j);}ELSEj:=8
+; IF(3<5)THEN{j:=7;i:=40;println(j);}ELSEj:=8
 
 	ldc	3
 	ldc	5
@@ -80,7 +90,7 @@ L003:
 L004:
 	ifeq	L002
 
-; {j:=7;i:=40;print(j);}
+; {j:=7;i:=40;println(j);}
 
 
 ; j:=7
@@ -93,7 +103,7 @@ L004:
 	ldc	40
 	putstatic	sample/i I
 
-; print(j)
+; println(j)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic	sample/j I
@@ -110,30 +120,56 @@ L002:
 	putstatic	sample/j I
 L001:
 
+; IF(false)THEN{println(i);}ELSEprintln("I skipped it")
+
+	ldc	0
+	ifeq	L006
+
+; {println(i);}
+
+
+; println(i)
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	getstatic	sample/i I
+	invokevirtual	java/io/PrintStream/println(I)V
+
+; 
+
+	goto	L005
+L006:
+
+; println("I skipped it")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "I skipped it"
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+L005:
+
 ; i:=0
 
 	ldc	0
 	putstatic	sample/i I
 
-; WHILE(i<10)DO{print(i);i:=i+1;}
+; WHILE(i<10)DO{println(i);i:=i+1;}
 
-L005:
+L007:
 	getstatic	sample/i I
 	ldc	10
-	if_icmplt	L007
+	if_icmplt	L009
 	iconst_0
-	goto	L008
-L007:
+	goto	L010
+L009:
 	iconst_1
-L008:
+L010:
 	iconst_1
 	ixor
-	ifne	L006
+	ifne	L008
 
-; {print(i);i:=i+1;}
+; {println(i);i:=i+1;}
 
 
-; print(i)
+; println(i)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic	sample/i I
@@ -148,17 +184,17 @@ L008:
 
 ; 
 
-	goto	L005
-L006:
+	goto	L007
+L008:
 
 ; i:=0
 
 	ldc	0
 	putstatic	sample/i I
 
-; DOj:=2*i;print(j);i:=i+1;WHILEi<10
+; DOj:=2*i;println(j);i:=i+1;WHILEi<10
 
-L009:
+L011:
 
 ; j:=2*i
 
@@ -167,7 +203,7 @@ L009:
 	imul
 	putstatic	sample/j I
 
-; print(j)
+; println(j)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic	sample/j I
@@ -184,24 +220,24 @@ L009:
 
 	getstatic	sample/i I
 	ldc	10
-	if_icmplt	L011
+	if_icmplt	L013
 	iconst_0
-	goto	L012
-L011:
+	goto	L014
+L013:
 	iconst_1
-L012:
+L014:
 	iconst_1
 	ixor
-	ifne	L010
-	goto	L009
-L010:
+	ifne	L012
+	goto	L011
+L012:
 
 ; alpha:=9.3
 
 	ldc	9.3
 	putstatic	sample/alpha F
 
-; print(alpha)
+; println(alpha)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic	sample/alpha F

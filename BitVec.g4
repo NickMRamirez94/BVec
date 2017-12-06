@@ -13,7 +13,10 @@ block     : declarations* funcdeclarations* compoundStmt ;
 funcdeclarations : FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar 
 				 ;
 
-declarations : VAR declList ';' #varDeclar ;
+declarations : VAR declList ';' #varDeclar 
+			 | localDeclarations #localDeclar
+			 ;
+localDeclarations locals [Integer slot = -1] : LOCALS declList ';' ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
 varList      : varId ( ',' varId )* ;
@@ -34,6 +37,7 @@ stmt : compoundStmt
      | dowhile_stat
      | while_stat
      | print_stat
+     | println_stat
      | return_stat
      | function_call
      | 
@@ -46,8 +50,9 @@ match_stat	   : MATCH expr WITH ( number ':' stmt )* ;
 dowhile_stat   : DO stmtList WHILE expr ;
 while_stat	   : WHILE expr DO stmt ;
 print_stat	   : 'print' '(' expr ')' ;
-return_stat	   : RETURN expr ; 
-function_call  : IDENTIFIER '(' expr* (',' expr )* ')' ;
+println_stat   : 'println' '(' expr ')' ;
+return_stat	   : RETURN expr ;
+function_call  : IDENTIFIER '(' expr* (',' expr )* ')' ; 
 
 variable : IDENTIFIER ;
 
@@ -60,6 +65,7 @@ expr locals [ TypeSpec type = null ]
     | variable             # variableExpr
     | '(' expr ')'         # parenExpr
     | STRING			   # stringExpr
+    | BOOL			       # booleanExpr
     ;
      
 mulDivOp : MUL_OP | DIV_OP ;
@@ -75,9 +81,10 @@ number locals [ TypeSpec type = null ]
     : INTEGER    # integerConst
     | FLOAT      # floatConst
     ;
-
+    
 PROGRAM : 'PROGRAM' ;
 VAR     : 'VARIABLES' ;
+LOCALS	: 'LOCALS' ;
 FUNCTION: 'FUNCTION' ;
 OBRACK  : '{' ;
 CBRACK  : '}' ;
@@ -91,6 +98,8 @@ MATCH	: 'MATCH' ;
 WITH	: 'WITH' ;
 
 STRING	: '"' .*? '"' ;
+
+BOOL	: 'true' | 'false' ;
 
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;

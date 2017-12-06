@@ -3,6 +3,7 @@ PROGRAM sample;
 VARIABLES
     i, j, k : integer;
     alpha, beta5x : real;
+    q, w : boolean;
     
 
     
@@ -11,36 +12,45 @@ VARIABLES
     j := i;
     i := -2 + 3*j;
     
-    print("I is equal to");
-    print(i);
+    q := true;
+    
+    print("I is equal to: ");
+    println(i);
     
     IF (3 < 5) THEN 
     	{
     		j := 7;
     		i := 40;
-    		print(j);
+    		println(j);
     	}
     ELSE j := 8;
+    
+    IF (false) THEN 
+    	{
+    		println(i);
+    	}
+    ELSE println("I skipped it");
     
     i := 0;
      
 	
 	WHILE (i < 10) DO
 		{
-			print(i);
+			println(i);
 			i := i + 1;
 		};
 	
 	i := 0;	
 	
+	
 	DO
 		j := 2*i;
-		print(j);
+		println(j);
 		i := i + 1;
 	WHILE i < 10;
 
 	alpha := 9.3;
-	print(alpha);
+	println(alpha);
     beta5x := alpha;
     beta5x := alpha/3.7 - alpha*2.88;
     

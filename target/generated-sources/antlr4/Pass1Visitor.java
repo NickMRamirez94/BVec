@@ -201,6 +201,11 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
             type = Predefined.realType;
             typeIndicator = "F";
         }
+        
+        else if (typeName.equalsIgnoreCase("boolean")) {
+        	type = Predefined.booleanType;
+        	typeIndicator = "Z";
+        }
         else {
             type = null;
             typeIndicator = "?";
@@ -298,6 +303,13 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     {
     	
     	ctx.type = null;
+    	return visitChildren(ctx);
+    }
+    
+    @Override
+    public Integer visitBooleanExpr(BitVecParser.BooleanExprContext ctx)
+    {
+    	ctx.type = Predefined.booleanType;
     	return visitChildren(ctx);
     }
 

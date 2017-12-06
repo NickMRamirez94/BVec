@@ -5,7 +5,7 @@ VARIABLES
     
 FUNCTION func() : integer;
 
-VARIABLES
+LOCALS
 	y, z : integer;
 	
 	{
