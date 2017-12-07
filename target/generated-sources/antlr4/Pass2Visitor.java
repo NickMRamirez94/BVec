@@ -10,6 +10,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     String programName;
     private PrintWriter jFile;
     
+    
     public Pass2Visitor(PrintWriter jFile)
     {
         this.jFile = jFile;
@@ -63,106 +64,13 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         
         return value;
     }
-    
+
     @Override
     public Integer visitFunctionDeclar(BitVecParser.FunctionDeclarContext ctx)
     {
-    	
-    	String fName = ctx.getChild(1).toString();
-    	String typeName = ctx.typeId().IDENTIFIER().toString();
-    	String rType;
-    	
-    	if (typeName.equalsIgnoreCase("integer")) {
-            rType = "I";
-        }
-        else if (typeName.equalsIgnoreCase("real")) {
-            rType = "F";
-        }
-        else {
-            rType = null;
-        }
-    	
-    	jFile.println();
-    	jFile.print(".method static " + fName + "(");
-    	//print parameter indicator types
-    	//there's probably a better way to do this
-    	Integer i = 0;
-    	while (ctx.formalParmList(i) != null) {
-    		visit(ctx.formalParmList(i));
-    		i++;
-    	}
-    	
-    	jFile.println(")" + rType);
-    	
-    	//visit block statement here
-    	visit(ctx.block());
-    	
-    	jFile.println(".limit stack 2");
-    	jFile.println(".limit locals 3");
-    	jFile.println(".end method");
-    	jFile.println();
-    	
     	return 0;
     }
     
-    @Override 
-    public Integer visitFormalParmList(BitVecParser.FormalParmListContext ctx)
-    {
-    	
-    	Integer i = 0;
-    	while (ctx.getChild(i) != null){
-    		visit(ctx.getChild(i));
-    		i++;
-    	}
-    	return 0;
-    }
-    
-    @Override
-    public Integer visitValueParm(BitVecParser.ValueParmContext ctx)
-    {
-    	
-        TypeSpec type = ctx.type;
-        String   typeIndicator;
-        
-        if (type == Predefined.integerType) {
-            typeIndicator = "I";
-        }
-        else if (type == Predefined.realType) {
-            
-            typeIndicator = "F";
-        }
-        else {
-            typeIndicator = "?";
-        }
-        
-        jFile.print(typeIndicator);
-        
-    	return 0;
-    }
-    
-    @Override
-    public Integer visitRefParm(BitVecParser.RefParmContext ctx)
-    {
-    	
-    	TypeSpec type = ctx.type;
-        String   typeIndicator;
-        
-        if (type == Predefined.integerType) {
-            typeIndicator = "I";
-        }
-        else if (type == Predefined.realType) {
-            
-            typeIndicator = "F";
-        }
-        else {
-            typeIndicator = "?";
-        }
-        
-        jFile.print(typeIndicator);
-    	
-    	return 0;
-    }
-
     @Override 
     public Integer visitStmt(BitVecParser.StmtContext ctx) 
     { 
@@ -179,6 +87,10 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
                              : (ctx.expr().type == Predefined.realType)    ? "F"
                              : (ctx.expr().type == Predefined.booleanType) ? "Z"
                              :                                    "?";
+        
+        if (ctx.expr().type == Predefined.undefinedType) {
+        	jFile.println("\tiaload");
+        }
         
         // Emit a field put instruction.
         jFile.println("\tputstatic\t" + programName
@@ -210,7 +122,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         	//code for the THEN statement (visit statements)
         	visit(ctx.getChild(3));
         	
-        	jFile.println(nextLabel.toString() + ": Hello");
+        	jFile.println(nextLabel.toString() + ":");
         	
     	}
     	
@@ -396,6 +308,37 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	}
     	return 0;
     }
+    
+    @Override
+    public Integer visitFunction_call(BitVecParser.Function_callContext ctx)
+    {
+    	String functionName = ctx.IDENTIFIER().toString();
+    	String parameters = "";
+    	TypeSpec type;
+    	
+    	Integer i = 0;
+    	
+    	while (ctx.expr(i) != null)
+    	{
+    		visit(ctx.expr(i));
+    		type = ctx.expr(i).type;
+    		if (type == Predefined.integerType) {
+    			parameters += "I";
+    		}
+    		else if(type == Predefined.realType) {
+    			parameters += "F";
+    		}
+    		else {
+    			parameters += "Ljava/lang/String;";
+    		}
+    		i++;
+    	}
+    	
+    	
+    	jFile.println("\tinvokestatic\t" + programName + "/" + functionName + "(" + parameters + ")V");
+    	
+    	return 0;
+    }
 
     @Override 
     public Integer visitAddSubExpr(BitVecParser.AddSubExprContext ctx)
@@ -437,6 +380,10 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	
     	TypeSpec type1 = ctx.expr(0).type;
     	TypeSpec type2 = ctx.expr(1).type;
+    	
+    	if (ctx.type == null) {
+    		System.out.println("Hello");
+    	}
     	
     	boolean integerMode =	(type1 == Predefined.integerType)
     						 && (type2 == Predefined.integerType);
@@ -533,11 +480,11 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         String variableName = ctx.variable().IDENTIFIER().toString();
         TypeSpec type = ctx.type;
         
+        
         String typeIndicator = (type == Predefined.integerType) ? "I"
                              : (type == Predefined.realType)    ? "F"
                              : (type == Predefined.booleanType) ? "Z"
                              :                                    "?";
-        
         // Emit a field get instruction.
         jFile.println("\tgetstatic\t" + programName +
                       "/" + variableName + " " + typeIndicator);

@@ -52,19 +52,6 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarDeclar(BitVecParser.VarDeclarContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code localDeclar}
-	 * labeled alternative in {@link BitVecParser#declarations}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLocalDeclar(BitVecParser.LocalDeclarContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link BitVecParser#localDeclarations}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLocalDeclarations(BitVecParser.LocalDeclarationsContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link BitVecParser#declList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -181,6 +168,12 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturn_stat(BitVecParser.Return_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link BitVecParser#function_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_call(BitVecParser.Function_callContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link BitVecParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -200,13 +193,6 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableExpr(BitVecParser.VariableExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code functioncallExpr}
-	 * labeled alternative in {@link BitVecParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctioncallExpr(BitVecParser.FunctioncallExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code addSubExpr}
 	 * labeled alternative in {@link BitVecParser#expr}.
@@ -300,10 +286,4 @@ public interface BitVecVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFloatConst(BitVecParser.FloatConstContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link BitVecParser#function_call}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunction_call(BitVecParser.Function_callContext ctx);
 }

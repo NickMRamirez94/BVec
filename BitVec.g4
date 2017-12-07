@@ -13,14 +13,11 @@ block     : declarations* funcdeclarations* compoundStmt ;
 funcdeclarations : FUNCTION IDENTIFIER '(' formalParmList* ')' ':' typeId ';' block ';' #functionDeclar 
 				 ;
 
-declarations : VAR declList ';' #varDeclar 
-			 | localDeclarations #localDeclar
-			 ;
-localDeclarations locals [Integer slot = -1] : LOCALS declList ';' ;
+declarations : VAR declList ';' #varDeclar ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
 varList      : varId ( ',' varId )* ;
-varId        locals [ String type = null ] : IDENTIFIER ;
+varId        locals [ String type = null , Integer slot = -1] : IDENTIFIER ;
 typeId       : IDENTIFIER ;
 formalParmList : formalParm ( ',' formalParm )* ;
 formalParm	 locals [ TypeSpec type = null ]
@@ -56,7 +53,7 @@ function_call  : IDENTIFIER '(' expr* (',' expr )* ')' ;
 
 variable : IDENTIFIER ;
 
-expr locals [ TypeSpec type = null ]
+expr locals [ TypeSpec type = null, Integer slot = -1 ]
     : expr mulDivOp expr   # mulDivExpr
     | expr addSubOp expr   # addSubExpr
     | expr relOp expr	   # relOpExpr
@@ -84,7 +81,6 @@ number locals [ TypeSpec type = null ]
     
 PROGRAM : 'PROGRAM' ;
 VAR     : 'VARIABLES' ;
-LOCALS	: 'LOCALS' ;
 FUNCTION: 'FUNCTION' ;
 OBRACK  : '{' ;
 CBRACK  : '}' ;

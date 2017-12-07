@@ -30,6 +30,78 @@
 .limit stack 1
 .end method
 
+.method static func()V
+
+; x,y,z:integer
+
+
+; x:=1
+
+	ldc	1
+	istore_0
+
+; y:=2
+
+	ldc	2
+	istore_1
+
+; z:=3
+
+	ldc	3
+	istore_2
+
+; x:=z
+
+	iload_2
+	istore_0
+
+; IF(x>y)THEN{x:=5;}ELSEx:=10
+
+	iload_0
+	iload_1
+	if_icmpgt	L003
+	iconst_0
+	goto	L004
+L003:
+	iconst_1
+L004:
+	ifeq	L002
+
+; {x:=5;}
+
+
+; x:=5
+
+	ldc	5
+	istore_0
+
+; 
+
+	goto	L001
+L002:
+
+; x:=10
+
+	ldc	10
+	istore_0
+L001:
+
+; println(x)
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	iload_0
+	invokevirtual	java/io/PrintStream/println(I)V
+
+; 
+
+
+	return
+
+.limit stack 2
+.limit locals 3
+.end method
+
+
 .method public static main([Ljava/lang/String;)V
 
 	new RunTimer
@@ -82,13 +154,13 @@
 
 	ldc	3
 	ldc	5
-	if_icmplt	L003
+	if_icmplt	L015
 	iconst_0
-	goto	L004
-L003:
+	goto	L016
+L015:
 	iconst_1
-L004:
-	ifeq	L002
+L016:
+	ifeq	L014
 
 ; {j:=7;i:=40;println(j);}
 
@@ -111,19 +183,19 @@ L004:
 
 ; 
 
-	goto	L001
-L002:
+	goto	L013
+L014:
 
 ; j:=8
 
 	ldc	8
 	putstatic	sample/j I
-L001:
+L013:
 
 ; IF(false)THEN{println(i);}ELSEprintln("I skipped it")
 
 	ldc	0
-	ifeq	L006
+	ifeq	L018
 
 ; {println(i);}
 
@@ -136,15 +208,15 @@ L001:
 
 ; 
 
-	goto	L005
-L006:
+	goto	L017
+L018:
 
 ; println("I skipped it")
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	ldc "I skipped it"
 	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
-L005:
+L017:
 
 ; i:=0
 
@@ -153,18 +225,18 @@ L005:
 
 ; WHILE(i<10)DO{println(i);i:=i+1;}
 
-L007:
+L019:
 	getstatic	sample/i I
 	ldc	10
-	if_icmplt	L009
+	if_icmplt	L021
 	iconst_0
-	goto	L010
-L009:
+	goto	L022
+L021:
 	iconst_1
-L010:
+L022:
 	iconst_1
 	ixor
-	ifne	L008
+	ifne	L020
 
 ; {println(i);i:=i+1;}
 
@@ -184,8 +256,8 @@ L010:
 
 ; 
 
-	goto	L007
-L008:
+	goto	L019
+L020:
 
 ; i:=0
 
@@ -194,7 +266,7 @@ L008:
 
 ; DOj:=2*i;println(j);i:=i+1;WHILEi<10
 
-L011:
+L023:
 
 ; j:=2*i
 
@@ -220,17 +292,17 @@ L011:
 
 	getstatic	sample/i I
 	ldc	10
-	if_icmplt	L013
+	if_icmplt	L025
 	iconst_0
-	goto	L014
-L013:
+	goto	L026
+L025:
 	iconst_1
-L014:
+L026:
 	iconst_1
 	ixor
-	ifne	L012
-	goto	L011
-L012:
+	ifne	L024
+	goto	L023
+L024:
 
 ; alpha:=9.3
 
@@ -267,6 +339,13 @@ L012:
 	fadd
 	fmul
 	putstatic	sample/beta5x F
+
+; func()
+
+	invokestatic	sample/func()V
+
+; 
+
 
 	getstatic     sample/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V

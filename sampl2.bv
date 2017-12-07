@@ -1,29 +1,69 @@
-PROGRAM sampl2;
+PROGRAM sample;
 
 VARIABLES
-    i : integer;
+    i, j, k : integer;
+    alpha, beta5x : real;
+    q, w : boolean;
     
-FUNCTION func() : integer;
+FUNCTION func() : void;
 
-LOCALS
-	y, z : integer;
+VARIABLES
+	x,y,z : integer;
 	
 	{
-		y := k;
-		z := k;
-		RETURN 2;
+		x := 1;
+		y := 2;
+		z := 3;
+		x := z;
+		IF (x > y) THEN
+		{
+			x := 5;
+		}
+		ELSE x := 10;
+		
+		println(x);
+		
 	};
-    
-    
-    
+ 
 {
-
-i := 6;
-
-MATCH i WITH
-    	5 : {i := 3;
-    		 i := 7;}
-    	6 : {i := 7};
+    i := 32;
+    j := i;
+    i := -2 + 3*j;
     
-  
+    q := true;
+    
+    
+    IF (3 < 5) THEN 
+    	{
+    		j := 7;
+    		i := 40;
+    	}
+    ELSE j := 8;
+    
+    
+    i := 0;
+     
+	
+	WHILE (i < 10) DO
+		{
+			i := i + 1;
+		};
+	
+	i := 0;	
+	
+	
+	DO
+		j := 2*i;
+		i := i + 1;
+	WHILE i < 10;
+
+	alpha := 9.3;
+	println(alpha);
+    beta5x := alpha;
+    beta5x := alpha/3.7 - alpha*2.88;
+    
+    
+    beta5x := 8.45*(alpha + 9.12);
+    
+    func();
 }.

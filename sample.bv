@@ -5,8 +5,26 @@ VARIABLES
     alpha, beta5x : real;
     q, w : boolean;
     
+FUNCTION func() : void;
 
-    
+VARIABLES
+	x,y,z : integer;
+	
+	{
+		x := 1;
+		y := 2;
+		z := 3;
+		x := z;
+		IF (x > y) THEN
+		{
+			x := 5;
+		}
+		ELSE x := 10;
+		
+		println(x);
+		
+	};
+ 
 {
     i := 32;
     j := i;
@@ -55,5 +73,7 @@ VARIABLES
     beta5x := alpha/3.7 - alpha*2.88;
     
     
-    beta5x := 8.45*(alpha + 9.12)
+    beta5x := 8.45*(alpha + 9.12);
+    
+    func();
 }.
