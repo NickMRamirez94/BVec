@@ -20,6 +20,10 @@
 .field private static q Z
 .field private static w Z
 
+; arr:array
+
+.field private static arr [Z
+
 .method public <init>()V
 
 	aload_0
@@ -30,67 +34,82 @@
 .limit stack 1
 .end method
 
-.method static func()V
+.method static func(I)V
 
-; x,y,z:integer
+; x,y:integer
 
+.var 1 is x I
+.var 2 is y I
 
-; x:=1
+; test,best:real
 
-	ldc	1
-	istore_0
+.var 3 is test F
+.var 4 is best F
 
-; y:=2
+; x:=0
 
-	ldc	2
+	ldc	0
 	istore_1
 
-; z:=3
+; println(" ")
 
-	ldc	3
-	istore_2
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
-; x:=z
+; println("Entered function")
 
-	iload_2
-	istore_0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Entered function"
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
-; IF(x>y)THEN{x:=5;}ELSEx:=10
+; println(" ")
 
-	iload_0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; WHILE(x<10)DO{print("The value of x is: ");println(x);x:=x+1;}
+
+L001:
 	iload_1
-	if_icmpgt	L003
+	ldc	10
+	if_icmplt	L003
 	iconst_0
 	goto	L004
 L003:
 	iconst_1
 L004:
-	ifeq	L002
+	iconst_1
+	ixor
+	ifne	L002
 
-; {x:=5;}
+; {print("The value of x is: ");println(x);x:=x+1;}
 
 
-; x:=5
+; print("The value of x is: ")
 
-	ldc	5
-	istore_0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "The value of x is: "
+	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
+
+; println(x)
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	iload_1
+	invokevirtual	java/io/PrintStream/println(I)V
+
+; x:=x+1
+
+	iload_1
+	ldc	1
+	iadd
+	istore_1
 
 ; 
 
 	goto	L001
 L002:
-
-; x:=10
-
-	ldc	10
-	istore_0
-L001:
-
-; println(x)
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	iload_0
-	invokevirtual	java/io/PrintStream/println(I)V
 
 ; 
 
@@ -98,7 +117,7 @@ L001:
 	return
 
 .limit stack 2
-.limit locals 3
+.limit locals 5
 .end method
 
 
@@ -138,31 +157,12 @@ L001:
 	ldc	1
 	putstatic	sample/q Z
 
-; print("I is equal to: ")
+; IF(q)THEN{j:=7;i:=40;print("Entered if statement. Its value is: ");println(j);}ELSEj:=8
 
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	ldc "I is equal to: "
-	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
+	getstatic	sample/q Z
+	ifeq	L010
 
-; println(i)
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic	sample/i I
-	invokevirtual	java/io/PrintStream/println(I)V
-
-; IF(3<5)THEN{j:=7;i:=40;println(j);}ELSEj:=8
-
-	ldc	3
-	ldc	5
-	if_icmplt	L015
-	iconst_0
-	goto	L016
-L015:
-	iconst_1
-L016:
-	ifeq	L014
-
-; {j:=7;i:=40;println(j);}
+; {j:=7;i:=40;print("Entered if statement. Its value is: ");println(j);}
 
 
 ; j:=7
@@ -175,6 +175,12 @@ L016:
 	ldc	40
 	putstatic	sample/i I
 
+; print("Entered if statement. Its value is: ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Entered if statement. Its value is: "
+	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
+
 ; println(j)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
@@ -183,90 +189,23 @@ L016:
 
 ; 
 
-	goto	L013
-L014:
+	goto	L009
+L010:
 
 ; j:=8
 
 	ldc	8
 	putstatic	sample/j I
-L013:
-
-; IF(false)THEN{println(i);}ELSEprintln("I skipped it")
-
-	ldc	0
-	ifeq	L018
-
-; {println(i);}
-
-
-; println(i)
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic	sample/i I
-	invokevirtual	java/io/PrintStream/println(I)V
-
-; 
-
-	goto	L017
-L018:
-
-; println("I skipped it")
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	ldc "I skipped it"
-	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
-L017:
+L009:
 
 ; i:=0
 
 	ldc	0
 	putstatic	sample/i I
 
-; WHILE(i<10)DO{println(i);i:=i+1;}
+; DOj:=2*i;print("The value of j is: ");println(j);i:=i+1;WHILEi<10
 
-L019:
-	getstatic	sample/i I
-	ldc	10
-	if_icmplt	L021
-	iconst_0
-	goto	L022
-L021:
-	iconst_1
-L022:
-	iconst_1
-	ixor
-	ifne	L020
-
-; {println(i);i:=i+1;}
-
-
-; println(i)
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic	sample/i I
-	invokevirtual	java/io/PrintStream/println(I)V
-
-; i:=i+1
-
-	getstatic	sample/i I
-	ldc	1
-	iadd
-	putstatic	sample/i I
-
-; 
-
-	goto	L019
-L020:
-
-; i:=0
-
-	ldc	0
-	putstatic	sample/i I
-
-; DOj:=2*i;println(j);i:=i+1;WHILEi<10
-
-L023:
+L011:
 
 ; j:=2*i
 
@@ -275,6 +214,12 @@ L023:
 	imul
 	putstatic	sample/j I
 
+; print("The value of j is: ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "The value of j is: "
+	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
+
 ; println(j)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
@@ -292,28 +237,22 @@ L023:
 
 	getstatic	sample/i I
 	ldc	10
-	if_icmplt	L025
+	if_icmplt	L013
 	iconst_0
-	goto	L026
-L025:
+	goto	L014
+L013:
 	iconst_1
-L026:
+L014:
 	iconst_1
 	ixor
-	ifne	L024
-	goto	L023
-L024:
+	ifne	L012
+	goto	L011
+L012:
 
 ; alpha:=9.3
 
 	ldc	9.3
 	putstatic	sample/alpha F
-
-; println(alpha)
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic	sample/alpha F
-	invokevirtual	java/io/PrintStream/println(F)V
 
 ; beta5x:=alpha
 
@@ -340,9 +279,10 @@ L024:
 	fmul
 	putstatic	sample/beta5x F
 
-; func()
+; func(i)
 
-	invokestatic	sample/func()V
+	getstatic	sample/i I
+	invokestatic	sample/func(I)V
 
 ; 
 

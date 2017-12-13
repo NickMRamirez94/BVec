@@ -7,6 +7,13 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+import wci.util.*;
+
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+
 public class BitVec 
 {
     public static void main(String[] args) throws Exception 
@@ -28,8 +35,10 @@ public class BitVec
         pass1.visit(tree);
 
         PrintWriter jFile = pass1.getAssemblyFile();
+        SymTabStack symTabStack = pass1.getSymTabStack();
+        
 
-        Pass2Visitor pass2 = new Pass2Visitor(jFile);
+        Pass2Visitor pass2 = new Pass2Visitor(jFile, symTabStack);
         pass2.visit(tree);
     }
 }

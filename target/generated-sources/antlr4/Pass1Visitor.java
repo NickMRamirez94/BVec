@@ -45,6 +45,8 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         return value;
     }
     
+    public SymTabStack getSymTabStack() {return symTabStack;}
+    
     @Override 
     public Integer visitHeader(BitVecParser.HeaderContext ctx) 
     { 
@@ -144,10 +146,11 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     	//visit block statement here
     	visit(ctx.block());
     	
+    	
     	jFile.println("\n\treturn\n");
     	
     	jFile.println(".limit stack 2");
-    	jFile.println(".limit locals 3");
+    	jFile.println(".limit locals " + localVars.size());
     	jFile.println(".end method");
     	jFile.println();
     	//pop function's symbol table off the stack
@@ -160,6 +163,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     public Integer visitFormalParmList(BitVecParser.FormalParmListContext ctx)
     {
     	Integer i = 0;
+    	variableIdListFunc = new ArrayList<SymTabEntry>();
     	while (ctx.getChild(i) != null){
     		visit(ctx.getChild(i));
     		i++;
@@ -173,6 +177,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     {
     	
     	String typeName = ctx.typeId().IDENTIFIER().toString();
+    	String variableName = ctx.varId().IDENTIFIER().toString();
     	
         TypeSpec type;
         String   typeIndicator;
@@ -191,6 +196,15 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         }
         
         ctx.type = type;
+        
+        //null pointer here with valueparameters
+        SymTabEntry variableId = symTabStack.enterLocal(variableName);
+        
+        variableId.setDefinition(VARIABLE);
+        variableIdListFunc.add(variableId);
+        if (!localVars.contains(variableName)) {
+    		localVars.add(variableName);
+    	}
         
         jFile.print(typeIndicator);
         
@@ -288,7 +302,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
             	typeIndicator = "Z";
             }
             
-            else if(typeName.equalsIgnoreCase("vector")) {
+            else if(typeName.equalsIgnoreCase("array")) {
             	type = Predefined.undefinedType;
             	typeIndicator = "?";
             }
@@ -306,20 +320,27 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     	                               id.getName() + " " + typeIndicator);
         			}
 	    	        //array
-	    	        /*
+	    	        
 	    	        else if (type == Predefined.undefinedType){
-	    	        	jFile.println("bipush\t10");
-	    	        	jFile.println("newarray\tint");
-	    	        	jFile.println("putstatic\t" + progName + "/" + id.getName() + " [I");
+	    	        	jFile.println(".field private static " +
+	                               id.getName() + " " + "[Z");
 	    	        }
-	    	        */
+	    	        
             
         		}
         	}
         	else if (symTabStack.getCurrentNestingLevel() == 2) {
         		for (SymTabEntry id : variableIdListFunc) {
         			id.setTypeSpec(type);
-        			//don't emit these instructions for local variables
+        			int slotNumber = -1;
+                	
+                	for(int i = 0; i < localVars.size(); i++) {
+                		String temp = localVars.get(i);
+                		if (temp.equals(id.getName())) {
+                			slotNumber = i;
+                		}
+                	}
+        			jFile.println(".var " + slotNumber + " is " + id.getName() + " " + typeIndicator);
         		}
         	}
         
@@ -721,7 +742,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         String variableName = ctx.variable().IDENTIFIER().toString();
         SymTabEntry variableId = symTabStack.lookup(variableName);
         
-        //if (!inFunc) {
+        
         ctx.type = variableId.getTypeSpec(); 
         
         if (symTabStack.getCurrentNestingLevel() == 2) {

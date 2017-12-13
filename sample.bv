@@ -4,24 +4,27 @@ VARIABLES
     i, j, k : integer;
     alpha, beta5x : real;
     q, w : boolean;
+    arr : array;
     
-FUNCTION func() : void;
+FUNCTION func(jim : integer) : void;
 
 VARIABLES
-	x,y,z : integer;
+	x, y : integer;
+	test, best : real;
 	
 	{
-		x := 1;
-		y := 2;
-		z := 3;
-		x := z;
-		IF (x > y) THEN
-		{
-			x := 5;
-		}
-		ELSE x := 10;
+		x := 0;
 		
-		println(x);
+		println(" ");
+		println("Entered function");
+		println(" ");
+		
+		WHILE (x < 10) DO
+		{
+			print("The value of x is: ");
+			println(x);
+			x := x + 1;
+		};
 		
 	};
  
@@ -32,48 +35,31 @@ VARIABLES
     
     q := true;
     
-    print("I is equal to: ");
-    println(i);
-    
-    IF (3 < 5) THEN 
+    IF (q) THEN 
     	{
     		j := 7;
     		i := 40;
+    		print("Entered if statement. Its value is: ");
     		println(j);
     	}
     ELSE j := 8;
-    
-    IF (false) THEN 
-    	{
-    		println(i);
-    	}
-    ELSE println("I skipped it");
-    
-    i := 0;
-     
-	
-	WHILE (i < 10) DO
-		{
-			println(i);
-			i := i + 1;
-		};
 	
 	i := 0;	
 	
 	
 	DO
 		j := 2*i;
+		print("The value of j is: ");
 		println(j);
 		i := i + 1;
 	WHILE i < 10;
 
 	alpha := 9.3;
-	println(alpha);
     beta5x := alpha;
     beta5x := alpha/3.7 - alpha*2.88;
     
     
     beta5x := 8.45*(alpha + 9.12);
     
-    func();
+    func(i);
 }.

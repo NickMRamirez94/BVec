@@ -9,11 +9,13 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
 {
     String programName;
     private PrintWriter jFile;
+    private SymTabStack symTabStack;
     
     
-    public Pass2Visitor(PrintWriter jFile)
+    public Pass2Visitor(PrintWriter jFile, SymTabStack symTabStacker)
     {
         this.jFile = jFile;
+        this.symTabStack = symTabStacker;
     }
     
     
@@ -81,7 +83,17 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     @Override 
     public Integer visitAssignmentStmt(BitVecParser.AssignmentStmtContext ctx)
     {
-        Integer value = visit(ctx.expr());
+    	
+    	String variableName = ctx.variable().IDENTIFIER().toString();
+        SymTabEntry variableId = symTabStack.lookup(variableName);
+        
+        TypeSpec type = variableId.getTypeSpec();
+        
+        if(type != Predefined.undefinedType) {
+        	Integer value = visit(ctx.expr());
+        }
+        
+        
         
         String typeIndicator = (ctx.expr().type == Predefined.integerType) ? "I"
                              : (ctx.expr().type == Predefined.realType)    ? "F"
@@ -92,12 +104,51 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         	jFile.println("\tiaload");
         }
         
+        if (typeIndicator.equals("?")) {
+        	if (type == Predefined.undefinedType) {
+        		typeIndicator = "[Z";
+        	}
+        }
+        
+        if (type == Predefined.undefinedType) {
+        	jFile.println("\tldc 200");
+        	jFile.println("\tnewarray boolean");
+        	jFile.println("\tputstatic " + programName + "/" + ctx.variable().IDENTIFIER().toString() + " " + "[Z");
+        	jFile.println();
+            jFile.println("\tnew importChar");
+            jFile.println("\tdup");
+            jFile.println("\tinvokespecial importChar/<init>()V");
+            
+            visit(ctx.expr());
+            jFile.println("\tinvokevirtual importChar.IMPORT(Ljava/lang/String;)Ljava/lang/String;");
+            
+            jFile.println("\tastore_3");
+            
+            jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
+            jFile.println("\taload_3");
+            jFile.println("\tinvokevirtual    java/io/PrintStream/println(Ljava/lang/String;)V");
+            
+            
+            jFile.println("\tnew BVector");
+            jFile.println("\tdup");
+            jFile.println("\tinvokespecial BVector/<init>()V");
+            jFile.println("\tastore_1");
+            jFile.println("\taload_1");
+            jFile.println("\taload_3");
+            jFile.println("\tinvokevirtual BVector.add_String(Ljava/lang/String;)V");
+            jFile.println("\taload_1");
+            jFile.println("\tinvokevirtual BVector.print()V");
+            jFile.println("\taload_1");
+            jFile.println("\tinvokevirtual BVector.ReturnBV()[Z");
+            jFile.println();
+        }
+        
         // Emit a field put instruction.
         jFile.println("\tputstatic\t" + programName
                            +  "/" + ctx.variable().IDENTIFIER().toString() 
                            + " " + typeIndicator);
 
-        return value; 
+        return 0; 
     }
     
     @Override
@@ -484,6 +535,7 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         String typeIndicator = (type == Predefined.integerType) ? "I"
                              : (type == Predefined.realType)    ? "F"
                              : (type == Predefined.booleanType) ? "Z"
+                             : (type == Predefined.undefinedType) ? "[I"
                              :                                    "?";
         // Emit a field get instruction.
         jFile.println("\tgetstatic\t" + programName +
