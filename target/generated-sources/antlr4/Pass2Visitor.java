@@ -88,65 +88,70 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         SymTabEntry variableId = symTabStack.lookup(variableName);
         
         TypeSpec type = variableId.getTypeSpec();
+        TypeSpec type2 = ctx.expr().type;
         
-        if(type != Predefined.undefinedType) {
-        	Integer value = visit(ctx.expr());
+        //make sure that they're the same time
+        if ((type == type2) || type2 == Predefined.undefinedType) {
+        
+	        if(type != Predefined.undefinedType) {
+	        	Integer value = visit(ctx.expr());
+	        }
+	        
+	        
+	        
+	        String typeIndicator = (ctx.expr().type == Predefined.integerType) ? "I"
+	                             : (ctx.expr().type == Predefined.realType)    ? "F"
+	                             : (ctx.expr().type == Predefined.booleanType) ? "Z"
+	                             :                                    "?";
+	        
+	        if (typeIndicator.equals("?")) {
+	        	if (type == Predefined.undefinedType) {
+	        		typeIndicator = "[Z";
+	        	}
+	        }
+	        
+	        if (type == Predefined.undefinedType) {
+	        	jFile.println("\tldc 200");
+	        	jFile.println("\tnewarray boolean");
+	        	jFile.println("\tputstatic " + programName + "/" + ctx.variable().IDENTIFIER().toString() + " " + "[Z");
+	        	jFile.println();
+	            jFile.println("\tnew importChar");
+	            jFile.println("\tdup");
+	            jFile.println("\tinvokespecial importChar/<init>()V");
+	            
+	            visit(ctx.expr());
+	            jFile.println("\tinvokevirtual importChar.IMPORT(Ljava/lang/String;)Ljava/lang/String;");
+	            
+	            jFile.println("\tastore_3");
+	            
+	            jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
+	            jFile.println("\taload_3");
+	            jFile.println("\tinvokevirtual    java/io/PrintStream/println(Ljava/lang/String;)V");
+	            
+	            
+	            jFile.println("\tnew BVector");
+	            jFile.println("\tdup");
+	            jFile.println("\tinvokespecial BVector/<init>()V");
+	            jFile.println("\tastore_1");
+	            jFile.println("\taload_1");
+	            jFile.println("\taload_3");
+	            jFile.println("\tinvokevirtual BVector.add_String(Ljava/lang/String;)V");
+	            jFile.println("\taload_1");
+	            jFile.println("\tinvokevirtual BVector.print()V");
+	            jFile.println("\taload_1");
+	            jFile.println("\tinvokevirtual BVector.ReturnBV()[Z");
+	            jFile.println();
+	        }
+	        
+	        // Emit a field put instruction.
+	        jFile.println("\tputstatic\t" + programName
+	                           +  "/" + ctx.variable().IDENTIFIER().toString() 
+	                           + " " + typeIndicator);
         }
         
-        
-        
-        String typeIndicator = (ctx.expr().type == Predefined.integerType) ? "I"
-                             : (ctx.expr().type == Predefined.realType)    ? "F"
-                             : (ctx.expr().type == Predefined.booleanType) ? "Z"
-                             :                                    "?";
-        
-        if (ctx.expr().type == Predefined.undefinedType) {
-        	jFile.println("\tiaload");
+        else {
+        	System.out.println("Type Checking Error: Assignment Statement Types Do Not Match");
         }
-        
-        if (typeIndicator.equals("?")) {
-        	if (type == Predefined.undefinedType) {
-        		typeIndicator = "[Z";
-        	}
-        }
-        
-        if (type == Predefined.undefinedType) {
-        	jFile.println("\tldc 200");
-        	jFile.println("\tnewarray boolean");
-        	jFile.println("\tputstatic " + programName + "/" + ctx.variable().IDENTIFIER().toString() + " " + "[Z");
-        	jFile.println();
-            jFile.println("\tnew importChar");
-            jFile.println("\tdup");
-            jFile.println("\tinvokespecial importChar/<init>()V");
-            
-            visit(ctx.expr());
-            jFile.println("\tinvokevirtual importChar.IMPORT(Ljava/lang/String;)Ljava/lang/String;");
-            
-            jFile.println("\tastore_3");
-            
-            jFile.println("\tgetstatic java/lang/System/out Ljava/io/PrintStream;");
-            jFile.println("\taload_3");
-            jFile.println("\tinvokevirtual    java/io/PrintStream/println(Ljava/lang/String;)V");
-            
-            
-            jFile.println("\tnew BVector");
-            jFile.println("\tdup");
-            jFile.println("\tinvokespecial BVector/<init>()V");
-            jFile.println("\tastore_1");
-            jFile.println("\taload_1");
-            jFile.println("\taload_3");
-            jFile.println("\tinvokevirtual BVector.add_String(Ljava/lang/String;)V");
-            jFile.println("\taload_1");
-            jFile.println("\tinvokevirtual BVector.print()V");
-            jFile.println("\taload_1");
-            jFile.println("\tinvokevirtual BVector.ReturnBV()[Z");
-            jFile.println();
-        }
-        
-        // Emit a field put instruction.
-        jFile.println("\tputstatic\t" + programName
-                           +  "/" + ctx.variable().IDENTIFIER().toString() 
-                           + " " + typeIndicator);
 
         return 0; 
     }
@@ -399,27 +404,36 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         TypeSpec type1 = ctx.expr(0).type;
         TypeSpec type2 = ctx.expr(1).type;
         
-        boolean integerMode =    (type1 == Predefined.integerType)
-                              && (type2 == Predefined.integerType);
-        boolean realMode    =    (type1 == Predefined.realType)
-                              && (type2 == Predefined.realType);
+        //type checking
+        if (type1 == type2) {
         
-        String op = ctx.addSubOp().getText();
-        String opcode;
-
-        if (op.equals("+")) {
-            opcode = integerMode ? "iadd"
-                   : realMode    ? "fadd"
-                   :               "????";
-        }
+	        boolean integerMode =    (type1 == Predefined.integerType)
+	                              && (type2 == Predefined.integerType);
+	        boolean realMode    =    (type1 == Predefined.realType)
+	                              && (type2 == Predefined.realType);
+	        
+	        String op = ctx.addSubOp().getText();
+	        String opcode;
+	
+	        if (op.equals("+")) {
+	            opcode = integerMode ? "iadd"
+	                   : realMode    ? "fadd"
+	                   :               "????";
+	        }
+	        else {
+	            opcode = integerMode ? "isub"
+	                   : realMode    ? "fsub"
+	                   :               "????";
+	        }
+	        
+	        // Emit an add or subtract instruction.
+	        jFile.println("\t" + opcode);
+	        
+	        }
+        
         else {
-            opcode = integerMode ? "isub"
-                   : realMode    ? "fsub"
-                   :               "????";
+        	System.out.println("Type Checking Error: Assignment Statement Types Do Not Match");
         }
-        
-        // Emit an add or subtract instruction.
-        jFile.println("\t" + opcode);
         
         return value; 
     }
@@ -432,61 +446,65 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
     	TypeSpec type1 = ctx.expr(0).type;
     	TypeSpec type2 = ctx.expr(1).type;
     	
-    	if (ctx.type == null) {
-    		System.out.println("Hello");
-    	}
+    	if (type1 == type2) {
     	
-    	boolean integerMode =	(type1 == Predefined.integerType)
-    						 && (type2 == Predefined.integerType);
-    	boolean realMode	=	(type1 == Predefined.realType)
-    					     && (type2 == Predefined.realType);
+	    	boolean integerMode =	(type1 == Predefined.integerType)
+	    						 && (type2 == Predefined.integerType);
+	    	boolean realMode	=	(type1 == Predefined.realType)
+	    					     && (type2 == Predefined.realType);
+	    	
+	    	String op = ctx.relOp().getText();
+	    	String opcode;
+	    	
+	    	if (realMode) {
+	    		jFile.println("fcmpg");
+	    	}
+	    	
+	    	if (op.equals("==")) {
+	            opcode = integerMode ? "if_icmpeq"
+	                    : realMode    ? "ifeq"
+	                    :               "????";
+	    	}
+	    	
+	    	else if (op.equals("!=")) {
+	            opcode = integerMode ? "if_icmpne"
+	                    : realMode    ? "ifne"
+	                    :               "????";
+	    	}
+	    	
+	    	else if (op.equals("<")) {
+	            opcode = integerMode ? "if_icmplt"
+	                    : realMode    ? "iflt"
+	                    :               "????";
+	    	}
+	    	
+	    	else {
+	            opcode = integerMode ? "if_icmpgt"
+	                    : realMode    ? "ifgt"
+	                    :               "????";
+	    	}
+	    	
+	    	Label trueLabel = Label.newLabel();
+	    	Label nextLabel = Label.newLabel();
+	    	
+	    	//emit the appropriate opcode for relational expression
+	    	jFile.println("\t" + opcode + "\t" + trueLabel.toString());
+	    	
+	    	//emit remaining code
+	    	
+	    	jFile.println("\ticonst_0");
+	    	jFile.println("\tgoto" + "\t" + nextLabel.toString());
+	    	//true-label
+	    	jFile.println(trueLabel.toString() + ":");
+	    	jFile.println("\ticonst_1");
+	    	//next-label
+	    	jFile.println(nextLabel.toString() + ":");
     	
-    	String op = ctx.relOp().getText();
-    	String opcode;
-    	
-    	if (realMode) {
-    		jFile.println("fcmpg");
-    	}
-    	
-    	if (op.equals("==")) {
-            opcode = integerMode ? "if_icmpeq"
-                    : realMode    ? "ifeq"
-                    :               "????";
-    	}
-    	
-    	else if (op.equals("!=")) {
-            opcode = integerMode ? "if_icmpne"
-                    : realMode    ? "ifne"
-                    :               "????";
-    	}
-    	
-    	else if (op.equals("<")) {
-            opcode = integerMode ? "if_icmplt"
-                    : realMode    ? "iflt"
-                    :               "????";
     	}
     	
     	else {
-            opcode = integerMode ? "if_icmpgt"
-                    : realMode    ? "ifgt"
-                    :               "????";
+        	System.out.println("Type Checking Error: Assignment Statement Types Do Not Match");
     	}
-    	
-    	Label trueLabel = Label.newLabel();
-    	Label nextLabel = Label.newLabel();
-    	
-    	//emit the appropriate opcode for relational expression
-    	jFile.println("\t" + opcode + "\t" + trueLabel.toString());
-    	
-    	//emit remaining code
-    	
-    	jFile.println("\ticonst_0");
-    	jFile.println("\tgoto" + "\t" + nextLabel.toString());
-    	//true-label
-    	jFile.println(trueLabel.toString() + ":");
-    	jFile.println("\ticonst_1");
-    	//next-label
-    	jFile.println(nextLabel.toString() + ":");
     	
     	
     	return value;
@@ -500,27 +518,37 @@ public class Pass2Visitor extends BitVecBaseVisitor<Integer>
         TypeSpec type1 = ctx.expr(0).type;
         TypeSpec type2 = ctx.expr(1).type;
         
-        boolean integerMode =    (type1 == Predefined.integerType)
-                              && (type2 == Predefined.integerType);
-        boolean realMode    =    (type1 == Predefined.realType)
-                              && (type2 == Predefined.realType);
+        //type checking
         
-        String op = ctx.mulDivOp().getText();
-        String opcode;
-
-        if (op.equals("*")) {
-            opcode = integerMode ? "imul"
-                   : realMode    ? "fmul"
-                   :               "f???";
+        if (type1 == type2) {
+        
+	        boolean integerMode =    (type1 == Predefined.integerType)
+	                              && (type2 == Predefined.integerType);
+	        boolean realMode    =    (type1 == Predefined.realType)
+	                              && (type2 == Predefined.realType);
+	        
+	        String op = ctx.mulDivOp().getText();
+	        String opcode;
+	
+	        if (op.equals("*")) {
+	            opcode = integerMode ? "imul"
+	                   : realMode    ? "fmul"
+	                   :               "f???";
+	        }
+	        else {
+	            opcode = integerMode ? "idiv"
+	                   : realMode    ? "fdiv"
+	                   :               "????";
+	        }
+	        
+	        // Emit a multiply or divide instruction.
+	        jFile.println("\t" + opcode);
+        
         }
+        
         else {
-            opcode = integerMode ? "idiv"
-                   : realMode    ? "fdiv"
-                   :               "????";
+        	System.out.println("Type Checking Error: Assignment Statement Types Do Not Match");
         }
-        
-        // Emit a multiply or divide instruction.
-        jFile.println("\t" + opcode);
         
         return value; 
     }

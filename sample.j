@@ -20,10 +20,6 @@
 .field private static q Z
 .field private static w Z
 
-; arr:array
-
-.field private static arr [Z
-
 .method public <init>()V
 
 	aload_0
@@ -34,22 +30,22 @@
 .limit stack 1
 .end method
 
-.method static func(I)V
+.method static func()V
 
 ; x,y:integer
 
-.var 1 is x I
-.var 2 is y I
+.var 0 is x I
+.var 1 is y I
 
 ; test,best:real
 
-.var 3 is test F
-.var 4 is best F
+.var 2 is test F
+.var 3 is best F
 
 ; x:=0
 
 	ldc	0
-	istore_1
+	istore_0
 
 ; println(" ")
 
@@ -69,10 +65,28 @@
 	ldc " "
 	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println("======Testing WHILE Loop In Function=====")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "======Testing WHILE Loop In Function====="
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
 ; WHILE(x<10)DO{print("The value of x is: ");println(x);x:=x+1;}
 
 L001:
-	iload_1
+	iload_0
 	ldc	10
 	if_icmplt	L003
 	iconst_0
@@ -96,15 +110,15 @@ L004:
 ; println(x)
 
 	getstatic java/lang/System/out Ljava/io/PrintStream;
-	iload_1
+	iload_0
 	invokevirtual	java/io/PrintStream/println(I)V
 
 ; x:=x+1
 
-	iload_1
+	iload_0
 	ldc	1
 	iadd
-	istore_1
+	istore_0
 
 ; 
 
@@ -117,7 +131,7 @@ L002:
 	return
 
 .limit stack 2
-.limit locals 5
+.limit locals 4
 .end method
 
 
@@ -131,6 +145,23 @@ L002:
 	dup
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        sample/_standardIn LPascalTextIn;
+
+; alpha:=5.0
+
+	ldc	5.0
+	putstatic	sample/alpha F
+
+; print("alpha is: ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "alpha is: "
+	invokevirtual	java/io/PrintStream/print(Ljava/lang/String;)V
+
+; println(alpha)
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	getstatic	sample/alpha F
+	invokevirtual	java/io/PrintStream/println(F)V
 
 ; i:=32
 
@@ -156,6 +187,24 @@ L002:
 
 	ldc	1
 	putstatic	sample/q Z
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println("======Testing IF Statement=====")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "======Testing IF Statement====="
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
 ; IF(q)THEN{j:=7;i:=40;print("Entered if statement. Its value is: ");println(j);}ELSEj:=8
 
@@ -202,6 +251,24 @@ L009:
 
 	ldc	0
 	putstatic	sample/i I
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println("======Testing DO WHILE Loop=====")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "======Testing DO WHILE Loop====="
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
 
 ; DOj:=2*i;print("The value of j is: ");println(j);i:=i+1;WHILEi<10
 
@@ -279,10 +346,27 @@ L012:
 	fmul
 	putstatic	sample/beta5x F
 
-; func(i)
+; println(" ")
 
-	getstatic	sample/i I
-	invokestatic	sample/func(I)V
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println("======Testing User Defined Function=====")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "======Testing User Defined Function====="
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; println(" ")
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc " "
+	invokevirtual	java/io/PrintStream/println(Ljava/lang/String;)V
+
+; func()
+
+	invokestatic	sample/func()V
 
 ; 
 

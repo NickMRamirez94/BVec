@@ -1,0 +1,21 @@
+PROGRAM sample2;
+
+VARIABLES
+    bitvecArray : array;
+    
+{
+
+	println(" ");
+    println("======Testing RunTime Library=====");
+    println(" ");
+    println("The RunTime Library will allow the user to declare");
+    println("An array and set a string equal to it. The string will");
+    println("Be the name of a text file that the user wishes to begin to");
+    println("encrypt. The RunTime Library functions called from that assignment");
+    println("will print out what the input file was. Convert it to a BitVector and");
+    println("print out the corresponding BitVector. That BitVector is then stored into the");
+    println("array that the file was assigned to.");
+    println(" ");
+    
+    bitvecArray := "inputBitVec.txt";
+}.

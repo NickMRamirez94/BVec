@@ -367,6 +367,8 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
             
             int slotNumber = -1;
             String variableName = ctx.variable().IDENTIFIER().toString();
+            
+            String type = "?";
         	
         	for(int i = 0; i < localVars.size(); i++) {
         		String temp = localVars.get(i);
@@ -375,7 +377,11 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
         		}
         	}
         	
-			jFile.println("\tistore_" + slotNumber);
+        	String typeIndicator = (ctx.expr().type == Predefined.integerType) ? "i"
+        						 : (ctx.expr().type == Predefined.realType) ? "f"
+        						 : (ctx.expr().type == Predefined.booleanType) ? "z"
+        						 : 											"?";
+			jFile.println("\t" + typeIndicator + "store_" + slotNumber);
 
             return value;
         }
@@ -638,7 +644,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     	TypeSpec type = integerMode ? Predefined.integerType
     				  : realMode	? Predefined.realType
     				  : 			  null;
-    	ctx.type = type;
+    	ctx.type = Predefined.booleanType;
     	
     	if(symTabStack.getCurrentNestingLevel() == 2) {
     		
@@ -775,7 +781,7 @@ public class Pass1Visitor extends BitVecBaseVisitor<Integer>
     public Integer visitStringExpr(BitVecParser.StringExprContext ctx) 
     {
     	
-    	ctx.type = null;
+    	ctx.type = Predefined.undefinedType;
     	if (symTabStack.getCurrentNestingLevel() == 2) {
     		String sValue = ctx.getChild(0).toString();
         	

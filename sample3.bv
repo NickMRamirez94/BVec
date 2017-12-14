@@ -1,0 +1,93 @@
+PROGRAM sample3;
+
+VARIABLES
+    i, j, k : integer;
+    alpha, beta5x : real;
+    q, w : boolean;
+    
+FUNCTION func() : void;
+
+VARIABLES
+	x, y, test, best : integer;
+	
+	{
+		x := 0;
+		y := 10;
+		test := 8;
+		best := 9;
+		
+		println(" ");
+		print("Local variable x is: ");
+		print(x);
+		println(" ");
+		
+		println(" ");
+		print("Local variable y is: ");
+		print(y);
+		println(" ");
+		
+		println(" ");
+		print("Local variable test is: ");
+		print(test);
+		println(" ");
+		
+		println(" ");
+		print("Local variable best is: ");
+		print(best);
+		println(" ");
+		
+		
+		
+	};
+ 
+{
+
+	alpha := 5.0;
+	
+	
+	print("alpha is: ");
+	println(alpha); 
+	
+	println(" ");
+    println("======Illustrating Type Checking. You can't assign a real to an integer variable=====");
+    println("======Prints Out to the Console that types do not match======");
+    println(" ");
+    
+    i := alpha;
+    
+    i := 32;
+    j := i;
+    i := -2 + 3*j;
+    
+    q := true;
+    
+    println(" ");
+    println("======Testing IF Statement=====");
+    println(" ");
+    
+    i := 15;
+    j := 12;
+    
+    q := i > j;
+    
+    IF (q) THEN 
+    	{
+    		j := 40;
+    		println(" ");
+    		print("Entered First IF statement. J's value is: ");
+    		println(j);
+    	}
+    ELSE j := 8;
+    
+    IF (i > j) THEN 
+    	{
+    		j := 22;
+    		println(" ");
+    		print("Entered Second IF statement. J's value is: ");
+    		println(j);
+    	}
+    ELSE j := 8;
+	
+    
+    func();
+}.

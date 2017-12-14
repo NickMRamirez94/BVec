@@ -4,9 +4,8 @@ VARIABLES
     i, j, k : integer;
     alpha, beta5x : real;
     q, w : boolean;
-    arr : array;
     
-FUNCTION func(jim : integer) : void;
+FUNCTION func() : void;
 
 VARIABLES
 	x, y : integer;
@@ -19,6 +18,10 @@ VARIABLES
 		println("Entered function");
 		println(" ");
 		
+		println(" ");
+    	println("======Testing WHILE Loop In Function=====");
+    	println(" ");
+		
 		WHILE (x < 10) DO
 		{
 			print("The value of x is: ");
@@ -29,11 +32,19 @@ VARIABLES
 	};
  
 {
+
+	alpha := 5.0;
+	print("alpha is: ");
+	println(alpha); 
     i := 32;
     j := i;
     i := -2 + 3*j;
     
     q := true;
+    
+    println(" ");
+    println("======Testing IF Statement=====");
+    println(" ");
     
     IF (q) THEN 
     	{
@@ -46,7 +57,10 @@ VARIABLES
 	
 	i := 0;	
 	
-	
+	println(" ");
+    println("======Testing DO WHILE Loop=====");
+    println(" ");
+    
 	DO
 		j := 2*i;
 		print("The value of j is: ");
@@ -61,5 +75,9 @@ VARIABLES
     
     beta5x := 8.45*(alpha + 9.12);
     
-    func(i);
+    println(" ");
+    println("======Testing User Defined Function=====");
+    println(" ");
+    
+    func();
 }.
