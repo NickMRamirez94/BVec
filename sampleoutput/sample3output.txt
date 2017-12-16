@@ -1,0 +1,20 @@
+alpha is: 5.0
+ 
+======Illustrating Type Checking. You can't assign a real to an integer variable=====
+======Prints Out to the Console that types do not match======
+ 
+ 
+======Testing IF Statement=====
+ 
+ 
+Entered First IF statement. J's value is: 40
+ 
+Local variable x is: 0 
+ 
+Local variable y is: 10 
+ 
+Local variable test is: 8 
+ 
+Local variable best is: 9 
+
+                0.00 seconds total execution time.

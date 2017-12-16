@@ -1,0 +1,39 @@
+alpha is: 5.0
+ 
+======Testing IF Statement=====
+ 
+Entered if statement. Its value is: 7
+ 
+======Testing DO WHILE Loop=====
+ 
+The value of j is: 0
+The value of j is: 2
+The value of j is: 4
+The value of j is: 6
+The value of j is: 8
+The value of j is: 10
+The value of j is: 12
+The value of j is: 14
+The value of j is: 16
+The value of j is: 18
+ 
+======Testing User Defined Function=====
+ 
+ 
+Entered function
+ 
+ 
+======Testing WHILE Loop In Function=====
+ 
+The value of x is: 0
+The value of x is: 1
+The value of x is: 2
+The value of x is: 3
+The value of x is: 4
+The value of x is: 5
+The value of x is: 6
+The value of x is: 7
+The value of x is: 8
+The value of x is: 9
+
+                0.00 seconds total execution time.
